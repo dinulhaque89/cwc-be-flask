@@ -1,0 +1,14 @@
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from models.user import User
+from marshmallow import EXCLUDE, fields
+
+class UserSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = User
+        load_instance = True
+        unknown = EXCLUDE 
+
+   # Add a plaintext password field for input
+    password = fields.String(load_only=True)
+
+   
