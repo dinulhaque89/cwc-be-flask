@@ -17,6 +17,7 @@ sqlalchemy-utils = "*"
 flask-cors = "*"
 python-dotenv = "*"
 passlib = "*"
+gunicorn = "*"
 
 [dev-packages]
 
