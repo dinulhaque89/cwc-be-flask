@@ -18,6 +18,7 @@ flask-cors = "*"
 python-dotenv = "*"
 passlib = "*"
 gunicorn = "*"
+phonenumbers = "*"
 
 [dev-packages]
 
