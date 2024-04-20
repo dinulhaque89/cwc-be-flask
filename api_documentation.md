@@ -6,7 +6,7 @@ All API requests are made to the base URL of our backend service. Replace localh
 
 
 Copy code
-http://localhost:4000/api
+http://canary-wharf-chauffeurs.herokuapp.com/api
 Authentication
 Our API uses JWT (JSON Web Tokens) for authentication. To make authenticated requests, you must include an Authorization header with the token obtained during login.
 

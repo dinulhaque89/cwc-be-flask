@@ -2,6 +2,10 @@
 
 Welcome to the backend documentation! This guide is designed to help beginners, tech recruiters, and engineers understand how to use and interact with the backend system I developed. Whether you're looking to integrate with our services, contribute to the project, or simply explore the technology stack I chose, this document will provide you with the necessary information to get started.
 
+## Accessing the Deployed Application
+
+The backend is deployed on Heroku and can be accessed at [https://canary-wharf-chauffeurs.herokuapp.com](https://canary-wharf-chauffeurs.herokuapp.com). For API usage, append `/api` to the base URL, as detailed in our [API documentation](api_documentation.md).
+
 ## Getting Started
 
 To get started with the backend, you'll need to set up your development environment. This involves installing the required dependencies and setting up the database.
