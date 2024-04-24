@@ -51,5 +51,5 @@ app.register_blueprint(driver_bp, url_prefix='/api/driver')
 app.register_blueprint(passenger_bp, url_prefix='/api/passenger')
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, port=8080, use_reloader=False)
 
