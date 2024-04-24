@@ -1,4 +1,5 @@
 import os
+import logging
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -11,6 +12,10 @@ load_dotenv()
 
 app = Flask(__name__)
 
+@app.before_request
+def log_request_info():
+    app.logger.debug('Headers: %s', request.headers)
+    app.logger.debug('Body: %s', request.get_data())
 
 # Example route to test the basic setup
 @app.route('/')
@@ -45,12 +50,5 @@ app.register_blueprint(driver_bp, url_prefix='/api/driver')
 app.register_blueprint(passenger_bp, url_prefix='/api/passenger')
 
 if __name__ == "__main__":
-    print("Starting the Flask application...")
     app.run(debug=True, use_reloader=False)
-    base_url = request.url_root
-    print(f"API endpoints will be available at: \n"
-          f"{base_url}api/admin for Admin operations\n"
-          f"{base_url}api/auth for Authentication operations\n"
-          f"{base_url}api/driver for Driver operations\n"
-          f"{base_url}api/passenger for Passenger operations")
 
