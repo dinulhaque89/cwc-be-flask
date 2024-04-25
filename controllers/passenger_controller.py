@@ -125,3 +125,17 @@ def create_review():
     except Exception as e:
         db.session.rollback()
         return jsonify({"msg": str(e)}), 400
+
+@passenger_bp.route('/details', methods=['PUT'])
+@secure_route(required_roles=['passenger'])
+def update_passenger_details():
+    passenger_id = get_jwt_identity()
+    data = request.get_json()
+    passenger = User.query.filter_by(user_id=passenger_id).first()
+    if not passenger:
+        return jsonify({"msg": "Passenger not found"}), 404
+    passenger.name = data.get('name', passenger.name)
+    passenger.email = data.get('email', passenger.email)
+    passenger.mobile_phone = data.get('mobile_phone', passenger.mobile_phone)
+    db.session.commit()
+    return jsonify({"msg": "Details updated successfully"}), 200
