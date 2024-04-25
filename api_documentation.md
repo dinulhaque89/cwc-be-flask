@@ -1,13 +1,16 @@
 API Documentation
+
 Welcome to our API documentation. This guide provides detailed information on how to interact with our backend services, including endpoints, request/response formats, and authentication methods. This documentation is intended for developers, tech enthusiasts, and anyone interested in integrating with our services.
 
 Base URL
 All API requests are made to the base URL of our backend service. Replace localhost with your deployed service's domain if applicable.
 
-
-Copy code
+```url
 http://canary-wharf-chauffeurs.herokuapp.com/api
+```
+
 Authentication
+
 Our API uses JWT (JSON Web Tokens) for authentication. To make authenticated requests, you must include an Authorization header with the token obtained during login.
 
 
@@ -34,7 +37,7 @@ Generate Reports: GET /admin/reports
 Example Requests
 Create Booking (Passenger)
 
-Copy code
+```json
 POST /api/passenger/bookings
 Content-Type: application/json
 Authorization: Bearer <your_token_here>
@@ -45,18 +48,20 @@ Authorization: Bearer <your_token_here>
   "booking_date": "2023-01-01",
   "start_time": "10:00:00"
 }
+```
+
+
 View Assigned Rides (Driver)
 
-Copy code
+```json
 GET /api/driver/assigned-rides
 Authorization: Bearer <your_token_here>
 Submit Review (Passenger)
 
-Copy code
 POST /api/passenger/reviews
 Content-Type: application/json
 Authorization: Bearer <your_token_here>
-
+```
 {
   "booking_id": 1,
   "rating": 5,
@@ -72,12 +77,14 @@ Our API uses conventional HTTP response codes to indicate success or failure of 
 500 Internal Server Error - We had a problem with our server. Try again later.
 For errors, the API responds with a JSON object containing the error message:
 
-json
 
 
-Copy code
+
+```json
 {
   "msg": "Error message"
 }
+```
+
 Conclusion
 This API documentation should provide you with all the necessary information to start integrating with our backend services. If you have any further questions or encounter any issues, please don't hesitate to contact us.

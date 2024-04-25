@@ -11,4 +11,6 @@ class UserSchema(SQLAlchemyAutoSchema):
    # Add a plaintext password field for input
     password = fields.String(load_only=True)
 
-   
+    name = fields.String(dump_only=True)
+    email = fields.String(dump_only=True)
+    mobile_phone = fields.String(dump_only=True)

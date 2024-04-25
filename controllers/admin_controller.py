@@ -34,7 +34,7 @@ def add_driver():
         db.session.commit()
         return driver_schema.dump(driver), 201
     except Exception as e:
-        db.session.rollback()  # Rollback in case of error
+        db.session.rollback()  
         return jsonify({'msg': str(e)}), 400
 
 @admin_bp.route('/drivers/<int:driver_id>', methods=['PUT'])

@@ -1,8 +1,10 @@
 from flask import Blueprint, request, jsonify, g
 from models.booking import Booking
 from models.review import Review
+from models.user import User
 from serializers.booking_schema import BookingSchema
 from serializers.review_schema import ReviewSchema
+from serializers.user_schema import UserSchema
 from middleware.secure_route import secure_route
 from flask_jwt_extended import get_jwt_identity
 from app import db
@@ -10,6 +12,25 @@ from datetime import date, datetime, timedelta
 
 
 passenger_bp = Blueprint('passenger', __name__)
+
+@passenger_bp.route('/details', methods=['GET'])
+@secure_route(required_roles=['passenger'])
+def get_passenger_details():
+    try:
+        passenger_id = get_jwt_identity()
+        passenger = User.query.filter_by(user_id=passenger_id).first()
+
+        if not passenger:
+            return jsonify({"msg": "Passenger not found"}), 404
+
+        # Assuming you have a UserSchema that can serialize user data
+        user_schema = UserSchema()
+        return jsonify(user_schema.dump(passenger)), 200
+
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
+    
+
 
 @passenger_bp.route('/bookings', methods=['POST'])
 @secure_route(required_roles=['passenger'])
