@@ -9,8 +9,8 @@ from datetime import datetime, timedelta
 
 def create_admins():
     admins = [
-        User(email='admin1@example.com', password_hash='admin123', role='admin', name='Admin One', mobile_phone='+1234567890'),
-        User(email='admin2@example.com', password_hash='admin234', role='admin', name='Admin Two', mobile_phone='+1234567891')
+        User(email='admin1@example.com', password='admin123', role='admin', name='Admin One', mobile_phone='+1234567890'),
+        User(email='admin2@example.com', password='admin234', role='admin', name='Admin Two', mobile_phone='+1234567891')
     ]
     db.session.add_all(admins)
     db.session.commit()
@@ -18,14 +18,15 @@ def create_admins():
 
 def create_users_and_drivers():
     users = [
-        User(email='passenger1@example.com', password_hash='pass123', role='passenger', name='Passenger One', mobile_phone='+1234567891'),
-        User(email='passenger2@example.com', password_hash='pass123', role='passenger', name='Passenger Two', mobile_phone='+1234567892'),
-        User(email='driver1@example.com', password_hash='drive123', role='driver', name='Driver One', mobile_phone='+1234567893'),
-        User(email='driver2@example.com', password_hash='drive123', role='driver', name='Driver Two', mobile_phone='+1234567894'),
+        User(email='passenger1@example.com', password='pass123', role='passenger', name='Passenger One', mobile_phone='+1234567891'),
+        User(email='passenger2@example.com', password='pass123', role='passenger', name='Passenger Two', mobile_phone='+1234567892'),
+        User(email='driver1@example.com', password='drive123', role='driver', name='Driver One', mobile_phone='+1234567893'),
+        User(email='driver2@example.com', password='drive123', role='driver', name='Driver Two', mobile_phone='+1234567894'),
     ]
     db.session.add_all(users)
     db.session.commit()
     print("Users and Drivers created successfully.")
+
 
     driver_users = User.query.filter(User.role == 'driver').all()
     driver_entries = [Driver(user_id=user.user_id, license_number=f'DRIV123{index}') for index, user in enumerate(driver_users, start=4)]
