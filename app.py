@@ -1,5 +1,6 @@
 import os
 import logging
+from flask_bcrypt import Bcrypt
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -39,6 +40,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = secret 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
+bcrypt = Bcrypt(app)
 
 from controllers.admin_controller import admin_bp
 from controllers.auth_controller import auth_bp
