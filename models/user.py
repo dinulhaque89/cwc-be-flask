@@ -21,6 +21,7 @@ class User(BaseModel):
 
     @password.setter
     def password(self, plaintext_password):
+        from app import bcrypt  # Local import to avoid circular dependency
         self.password_hash = bcrypt.generate_password_hash(plaintext_password).decode('utf-8')
 
     def verify_password(self, password):
