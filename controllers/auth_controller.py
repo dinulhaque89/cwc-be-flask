@@ -18,7 +18,6 @@ def signup_driver():
 
 def signup_user(role):
     data = request.get_json()
-    data['password'] = data['password']
     data['role'] = role  # Assign role based on the endpoint
 
     if User.query.filter_by(email=data['email']).first():
@@ -28,6 +27,7 @@ def signup_user(role):
 
     try:
         user = user_schema.load(data, session=db.session)
+        user.set_password(data['password'])  # Hash the password before saving
         db.session.add(user)
         db.session.commit()
         access_token = create_access_token(identity=user.user_id, expires_delta=timedelta(days=1))
@@ -39,7 +39,7 @@ def signup_user(role):
 def login():
     data = request.get_json()
     user = User.query.filter_by(email=data['email']).first()
-    if user and user.password_hash == data['password']:
+    if user and user.verify_password(data['password']):
         access_token = create_access_token(identity=user.user_id, expires_delta=timedelta(days=1))
         return jsonify(access_token=access_token), 200
     else:
