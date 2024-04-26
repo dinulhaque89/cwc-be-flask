@@ -23,7 +23,6 @@ def get_passenger_details():
         if not passenger:
             return jsonify({"msg": "Passenger not found"}), 404
 
-        # Assuming you have a UserSchema that can serialize user data
         user_schema = UserSchema()
         return jsonify(user_schema.dump(passenger)), 200
 
@@ -120,7 +119,6 @@ def create_review():
         review = ReviewSchema().load(data, session=db.session)
         db.session.add(review)
         db.session.commit()
-        # Potentially notify the driver about the new review
         return ReviewSchema().dump(review), 201
     except Exception as e:
         db.session.rollback()
