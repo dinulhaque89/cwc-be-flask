@@ -142,7 +142,7 @@ def update_passenger_details():
 @secure_route(required_roles=['passenger'])
 def change_password():
     data = request.get_json()
-    print("Received payload:", data)  # Log the received data
+    print("Received payload:", data)  # Ensure to handle sensitive data logging securely.
 
     current_password = data.get('currentPassword')
     new_password = data.get('newPassword')

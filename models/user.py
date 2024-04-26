@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, Enum
-from sqlalchemy_utils import PasswordType, PhoneNumberType
+from sqlalchemy_utils import PhoneNumberType
 from models.base import BaseModel
-from app import db
-from werkzeug.security import generate_password_hash, check_password_hash
+from app import db, bcrypt
+from sqlalchemy.ext.hybrid import hybrid_property
 
 
 
@@ -10,22 +10,21 @@ class User(BaseModel):
     __tablename__ = 'users'
     user_id = Column(Integer, primary_key=True)
     email = Column(String(100), unique=True, nullable=False)
-    password_hash = Column(PasswordType(
-        schemes=['pbkdf2_sha256'],
-        deprecated=['auto'],
-    ))
+    password_hash = Column(String(128), nullable=True)
     role = Column(Enum('passenger', 'driver', 'admin', name='user_roles'))
     name = Column(String(100))
     mobile_phone = Column(PhoneNumberType())
 
-    @staticmethod
-    def hash_password(password):
-        return generate_password_hash(password)
-    
+    @hybrid_property
+    def password(self):
+        pass
+
+    @password.setter
+    def password(self, plaintext_password):
+        self.password_hash = bcrypt.generate_password_hash(plaintext_password).decode('utf-8')
+
     def verify_password(self, password):
-        # Convert the PasswordType object to string if it's not already a string
-        hash_str = str(self.password_hash) if not isinstance(self.password_hash, str) else self.password_hash
-        return check_password_hash(hash_str, password)
+        return bcrypt.check_password_hash(self.password_hash, password)
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password = password  # This will trigger the password setter
