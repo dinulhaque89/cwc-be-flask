@@ -141,13 +141,25 @@ def update_passenger_details():
 @passenger_bp.route('/change-password', methods=['POST'])
 @secure_route(required_roles=['passenger'])
 def change_password():
-    passenger_id = get_jwt_identity()
     data = request.get_json()
+    print("Received payload:", data)  # Log the received data
+
+    current_password = data.get('currentPassword')
+    new_password = data.get('newPassword')
+
+    if not current_password or not new_password:
+        return jsonify({"msg": "Missing password fields"}), 400
+
+    passenger_id = get_jwt_identity()
     passenger = User.query.filter_by(user_id=passenger_id).first()
+
     if not passenger:
         return jsonify({"msg": "Passenger not found"}), 404
-    if not passenger.verify_password(data['currentPassword']):
+
+    if not passenger.verify_password(current_password):
         return jsonify({"msg": "Current password is incorrect"}), 400
-    passenger.password_hash = User.hash_password(data['newPassword'])
+
+    passenger.set_password(new_password)
     db.session.commit()
+
     return jsonify({"msg": "Password changed successfully"}), 200

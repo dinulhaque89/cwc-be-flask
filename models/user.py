@@ -24,8 +24,8 @@ class User(BaseModel):
     
     def verify_password(self, password):
         # Ensure the password_hash is treated as a string
-        hash_str = str(self.password_hash)
-        return check_password_hash(hash_str, password)
+        # hash_str = str(self.password_hash) if not isinstance(self.password_hash, str) else self.password_hash
+        return check_password_hash(self.password_hash, password)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
