@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 flask = "*"
-sqlalchemy = "==2.0.1"
+sqlalchemy = "*"
 flask-sqlalchemy = "*"
 psycopg2-binary = "*"
 flask-marshmallow = "*"
@@ -19,9 +19,8 @@ python-dotenv = "*"
 passlib = "*"
 gunicorn = "*"
 phonenumbers = "*"
-sqlalchemy-bcrypt = "*"
-sqlalchemy.ext.hybrid = "*"
 bcrypt = "*"
+
 [dev-packages]
 
 [requires]
