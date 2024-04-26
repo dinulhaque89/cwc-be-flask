@@ -139,3 +139,17 @@ def update_passenger_details():
     passenger.mobile_phone = data.get('mobile_phone', passenger.mobile_phone)
     db.session.commit()
     return jsonify({"msg": "Details updated successfully"}), 200
+
+@passenger_bp.route('/change-password', methods=['POST'])
+@secure_route(required_roles=['passenger'])
+def change_password():
+    passenger_id = get_jwt_identity()
+    data = request.get_json()
+    passenger = User.query.filter_by(user_id=passenger_id).first()
+    if not passenger:
+        return jsonify({"msg": "Passenger not found"}), 404
+    if not passenger.verify_password(data['currentPassword']):
+        return jsonify({"msg": "Current password is incorrect"}), 400
+    passenger.password_hash = User.hash_password(data['newPassword'])
+    db.session.commit()
+    return jsonify({"msg": "Password changed successfully"}), 200
