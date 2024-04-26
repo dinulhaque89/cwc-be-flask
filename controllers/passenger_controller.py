@@ -157,14 +157,19 @@ def change_password():
         return jsonify({"msg": "Passenger not found"}), 404
 
     try:
+        print("Verifying current password...")
         if not passenger.verify_password(current_password):
+            print("Current password is incorrect.")
             return jsonify({"msg": "Current password is incorrect"}), 400
 
+        print("Setting new password...")
         passenger.set_password(new_password)
         db.session.commit()
+        print("Password changed successfully.")
 
         return jsonify({"msg": "Password changed successfully"}), 200
 
     except ValueError as e:
+        print("Error occurred while changing the password:", str(e))
         db.session.rollback()
         return jsonify({"msg": "An error occurred while changing the password"}), 500
