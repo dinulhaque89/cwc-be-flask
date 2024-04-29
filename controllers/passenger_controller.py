@@ -177,15 +177,18 @@ def change_password():
 def get_reviews():
     passenger_id = get_jwt_identity()
     try:
-        reviews = Review.query.join(Driver, Review.driver_id == Driver.driver_id)\
-                               .join(User, Driver.user_id == User.user_id)\
-                               .filter(Review.passenger_id == passenger_id)\
-                               .all()
+        reviews = db.session.query(Review, Driver, User).\
+            join(Driver, Review.driver_id == Driver.driver_id).\
+            join(User, Driver.user_id == User.user_id).\
+            filter(Review.passenger_id == passenger_id).\
+            all()
+
         reviews_data = [{
             "driver_name": user.name,
             "rating": review.rating,
             "comments": review.comments
         } for review, driver, user in reviews]
+
         return jsonify(reviews_data), 200
     except Exception as e:
         return jsonify({"msg": str(e)}), 500
