@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, g
 from models.booking import Booking
 from models.review import Review
 from models.user import User
+from models.driver import Driver
 from serializers.booking_schema import BookingSchema
 from serializers.review_schema import ReviewSchema
 from serializers.user_schema import UserSchema
@@ -168,6 +169,24 @@ def change_password():
         print("Password changed successfully.")
 
         return jsonify({"msg": "Password changed successfully"}), 200
+
+@passenger_bp.route('/reviews', methods=['GET'])
+@secure_route(required_roles=['passenger'])
+def get_reviews():
+    passenger_id = get_jwt_identity()
+    try:
+        reviews = Review.query.join(Driver, Review.driver_id == Driver.driver_id)\
+                                .join(User, Driver.user_id == User.user_id)\
+                                .filter(Review.passenger_id == passenger_id)\
+                                .all()
+        reviews_data = [{
+            "driver_name": user.name,
+            "rating": review.rating,
+            "comments": review.comments
+        } for review, driver, user in reviews]
+        return jsonify(reviews_data), 200
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
 
     except ValueError as e:
         print("Error occurred while changing the password:", str(e))

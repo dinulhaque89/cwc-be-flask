@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Index
 from models.base import BaseModel
 class Review(BaseModel):
     __tablename__ = 'reviews'
@@ -8,3 +8,7 @@ class Review(BaseModel):
     driver_id = Column(Integer, ForeignKey('drivers.driver_id'))
     rating = Column(Integer)
     comments = Column(String(300))
+
+    __table_args__ = (
+        Index('idx_driver_id', 'driver_id'), 
+    )
