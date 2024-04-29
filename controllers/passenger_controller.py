@@ -143,13 +143,12 @@ def update_passenger_details():
 @secure_route(required_roles=['passenger'])
 def change_password():
     data = request.get_json()
-    print("Received payload:", data)  # Ensure to handle sensitive data logging securely.
 
     current_password = data.get('currentPassword')
     new_password = data.get('newPassword')
 
     if not current_password or not new_password:
-        return jsonify({"msg": "Missing password fields"}), 400
+        return jsonify({"msg": "Both current and new passwords are required."}), 400
 
     passenger_id = get_jwt_identity()
     passenger = User.query.filter_by(user_id=passenger_id).first()
@@ -158,17 +157,20 @@ def change_password():
         return jsonify({"msg": "Passenger not found"}), 404
 
     try:
-        print("Verifying current password...")
         if not passenger.verify_password(current_password):
-            print("Current password is incorrect.")
             return jsonify({"msg": "Current password is incorrect"}), 400
 
-        print("Setting new password...")
+        # Check new password strength (example check, implement according to your policy)
+        if len(new_password) < 8:
+            return jsonify({"msg": "New password must be at least 8 characters long."}), 400
+
         passenger.set_password(new_password)
         db.session.commit()
-        print("Password changed successfully.")
 
         return jsonify({"msg": "Password changed successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": "Failed to change password due to an internal error"}), 500
 
 @passenger_bp.route('/reviews', methods=['GET'])
 @secure_route(required_roles=['passenger'])
@@ -176,9 +178,9 @@ def get_reviews():
     passenger_id = get_jwt_identity()
     try:
         reviews = Review.query.join(Driver, Review.driver_id == Driver.driver_id)\
-                                .join(User, Driver.user_id == User.user_id)\
-                                .filter(Review.passenger_id == passenger_id)\
-                                .all()
+                               .join(User, Driver.user_id == User.user_id)\
+                               .filter(Review.passenger_id == passenger_id)\
+                               .all()
         reviews_data = [{
             "driver_name": user.name,
             "rating": review.rating,
@@ -187,8 +189,3 @@ def get_reviews():
         return jsonify(reviews_data), 200
     except Exception as e:
         return jsonify({"msg": str(e)}), 500
-
-    except ValueError as e:
-        print("Error occurred while changing the password:", str(e))
-        db.session.rollback()
-        return jsonify({"msg": "An error occurred while changing the password"}), 500
