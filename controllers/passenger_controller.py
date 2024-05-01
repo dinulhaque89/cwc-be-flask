@@ -37,11 +37,24 @@ def get_passenger_details():
 def create_booking():
     try:
         data = request.get_json()
-        data['passenger_id'] = get_jwt_identity()  # Ensure the booking is associated with the logged-in user
+        data['passenger_id'] = get_jwt_identity()
+
+        # Validate booking_date and start_time
+        booking_date = datetime.strptime(data['booking_date'], '%Y-%m-%d').date()
+        start_time = datetime.strptime(data['start_time'], '%H:%M').time()
+        current_datetime = datetime.now()
+
+        if booking_date < current_datetime.date():
+            return jsonify({"msg": "Booking date must be today or in the future"}), 400
+        
+        if booking_date == current_datetime.date() and start_time < current_datetime.time():
+            return jsonify({"msg": "Start time must be in the future"}), 400
+
+
         booking = BookingSchema().load(data, session=db.session)
         db.session.add(booking)
         db.session.commit()
-        # Implement email or notification sending logic here
+        
         return BookingSchema().dump(booking), 201
     except Exception as e:
         db.session.rollback()
@@ -192,3 +205,19 @@ def get_reviews():
         return jsonify(reviews_data), 200
     except Exception as e:
         return jsonify({"msg": str(e)}), 500
+
+@passenger_bp.route('/bookings/<int:booking_id>/end-time', methods=['PUT'])
+@secure_route(required_roles=['admin', 'driver'])
+def update_booking_end_time(booking_id):
+    try:
+        data = request.get_json()
+        end_time = datetime.strptime(data['end_time'], '%H:%M').time()
+
+        booking = Booking.query.get_or_404(booking_id)
+        booking.end_time = end_time
+        db.session.commit()
+
+        return jsonify({"msg": "Booking end time updated successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": str(e)}), 400
