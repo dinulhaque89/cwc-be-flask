@@ -1,5 +1,10 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Index
 from models.base import BaseModel
+from app import db
+from models.booking import Booking
+from models.user import User
+from models.driver import Driver
+
 class Review(BaseModel):
     __tablename__ = 'reviews'
     review_id = Column(Integer, primary_key=True)

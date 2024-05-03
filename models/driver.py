@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from models.base import BaseModel
 from models.vehicle import Vehicle
+from app import db
 
 class Driver(BaseModel):
     __tablename__ = 'drivers'

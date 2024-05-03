@@ -3,6 +3,7 @@ from models.booking import Booking
 from models.review import Review
 from models.user import User
 from models.driver import Driver
+from serializers.driver_schema import DriverSchema
 from serializers.booking_schema import BookingSchema
 from serializers.review_schema import ReviewSchema
 from serializers.user_schema import UserSchema
