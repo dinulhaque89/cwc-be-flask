@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey, Time
 from sqlalchemy.ext.hybrid import hybrid_property
 from app import db
 
@@ -13,8 +13,8 @@ class Booking(BaseModel):
     start_location = Column(String(200))
     end_location = Column(String(200))
     booking_date = Column(Date)
-    start_time = Column(String(50))
-    end_time = Column(String(50), nullable=True)
+    start_time = Column(Time)
+    end_time = Column(Time, nullable=True)
     status = Column(String(50))
     fare = Column(Float)
 

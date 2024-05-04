@@ -42,7 +42,7 @@ def create_booking():
 
         # Validate booking_date and start_time
         booking_date = datetime.strptime(data['booking_date'], '%Y-%m-%d').date()
-        start_time = datetime.strptime(data['start_time'], '%H:%M').time()
+        start_time = datetime.strptime(data['start_time'], '%H:%M:%S').time()
         current_datetime = datetime.now()
 
         if booking_date < current_datetime.date():
