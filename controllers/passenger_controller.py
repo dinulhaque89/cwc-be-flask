@@ -126,7 +126,7 @@ def create_review():
             return jsonify({"msg": "Review can only be made on completed bookings by the passenger."}), 400
         
         current_time = datetime.now()
-        booking_end_time = datetime.combine(booking.booking_date, datetime.strptime(booking.end_time, "%H:%M:%S.%f").time())
+        booking_end_time = datetime.combine(booking.booking_date, booking.end_time)
         
         if current_time <= booking_end_time:
             return jsonify({"msg": "Review can only be made after the booking end time."}), 400
