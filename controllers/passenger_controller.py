@@ -101,7 +101,8 @@ def get_booking(booking_id):
 def cancel_booking(booking_id):
     try:
         booking = Booking.query.filter_by(booking_id=booking_id, passenger_id=get_jwt_identity()).first_or_404()
-        start_datetime = datetime.combine(booking.booking_date, datetime.strptime(booking.start_time, "%H:%M:%S.%f").time())
+        start_time_str = booking.start_time.strftime("%H:%M:%S")
+        start_datetime = datetime.combine(booking.booking_date, datetime.strptime(start_time_str, "%H:%M:%S").time())
         if datetime.now() + timedelta(hours=1) < start_datetime:
             booking.status = 'cancelled'
             db.session.commit()
