@@ -11,6 +11,7 @@ from models.review import Review
 from serializers.user_schema import UserSchema
 from serializers.booking_schema import BookingSchema
 from serializers.driver_schema import DriverSchema
+from flask_jwt_extended import get_jwt_identity
 
 
 
@@ -235,3 +236,20 @@ def remove_passenger(user_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'msg': str(e)}), 400
+    
+
+@admin_bp.route('/details', methods=['GET'])
+@secure_route(required_roles=['admin'])
+def get_admin_details():
+    try:
+        user_id = get_jwt_identity()
+        admin = User.query.filter_by(user_id=user_id, role='admin').first()
+
+        if not admin:
+            return jsonify({"msg": "Admin not found"}), 404
+
+        user_schema = UserSchema()
+        return jsonify(user_schema.dump(admin)), 200
+
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500

@@ -101,3 +101,20 @@ def view_feedback():
         # Log the error for debugging purposes
         print(f"Error fetching feedback: {e}")
         return jsonify({"msg": "Failed to fetch feedback"}), 500
+    
+
+@driver_bp.route('/details', methods=['GET'])
+@secure_route(required_roles=['driver'])
+def get_driver_details():
+    try:
+        user_id = get_jwt_identity()
+        driver = Driver.query.filter_by(user_id=user_id).first()
+
+        if not driver:
+            return jsonify({"msg": "Driver not found"}), 404
+
+        driver_schema = DriverSchema()
+        return jsonify(driver_schema.dump(driver)), 200
+
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
