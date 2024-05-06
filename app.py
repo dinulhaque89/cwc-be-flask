@@ -46,11 +46,13 @@ from controllers.admin_controller import admin_bp
 from controllers.auth_controller import auth_bp
 from controllers.driver_controller import driver_bp
 from controllers.passenger_controller import passenger_bp
+from controllers.user_controller import user_bp
 
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(driver_bp, url_prefix='/api/driver')
 app.register_blueprint(passenger_bp, url_prefix='/api/passenger')
+app.register_blueprint(user_bp, url_prefix='/api/me')
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080, use_reloader=False)
